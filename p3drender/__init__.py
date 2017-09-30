@@ -16,6 +16,8 @@ import py3d
 
 from .renderscript import build_render_script
 
+def is_windows():
+    return os.name == 'nt'
 
 def get_tempfile(suffix):
     while True:
@@ -24,6 +26,11 @@ def get_tempfile(suffix):
         if not os.path.exists(name):
             return name
 
+def path_platform(path):
+    if is_windows():
+        return path
+
+    return path.replace("\\", "/")
 
 def path_insensitive(path):
     return _path_insensitive(path) or path
@@ -65,14 +72,14 @@ def _path_insensitive(path):
         return
 
 def find_file(p3dfile, path):
-    path = path.replace("\\", "/")
+    path = path_platform(path)
     p3dfile = os.path.dirname(os.path.abspath(p3dfile))
 
-    while "/" in p3dfile[1:]:
+    while os.sep in p3dfile[1:]:
         if "$PBOPREFIX$" in os.listdir(p3dfile):
             with open(os.path.join(p3dfile, "$PBOPREFIX$")) as f:
                 prefix = f.read().strip()
-            prefix = prefix.replace("\\", "/")
+            prefix = path_platform(prefix)
             if prefix == path[:len(prefix)]:
                 return path_insensitive(os.path.join(p3dfile, path[len(prefix)+1:]))
         if os.path.exists(path_insensitive(os.path.join(p3dfile, path))):
