@@ -19,7 +19,8 @@ from .renderscript import build_render_script
 
 def get_tempfile(suffix):
     while True:
-        name = "/tmp/{}{}".format(next(tempfile._get_candidate_names()), suffix)
+        filename = "{}{}".format(next(tempfile._get_candidate_names()), suffix)
+        name = os.path.join(tempfile.gettempdir(), filename)
         if not os.path.exists(name):
             return name
 
