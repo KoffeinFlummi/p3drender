@@ -14,6 +14,7 @@ Options:
                                 item (front-left perspective, 512x512) 
                                 (Overwrites other options)
     -c, --camera <xyz>      Camera position in form x,y,z [default: 0,-5,0]
+    --converter imagetopaa  Override use of armake by specifying imagetopaa
     -r, --resolution <res>  Output resolution in form x,y [default: 512,512]
     -t, --translate <xyz>   Translation to apply to object [default: 0,0,0]
     -o, --orthographic      Set camera to orthographic instead of perspective

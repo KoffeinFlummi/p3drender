@@ -81,15 +81,17 @@ def find_file(p3dfile, path):
     raise FileNotFoundError("Failed to find {}".format(path))
 
 
-def convert_texture(p3dfile, paa):
+def convert_texture(p3dfile, paa, args):
     if paa == "" or paa[0] == "#":
         return ""
 
     path = find_file(p3dfile, paa)
     result = get_tempfile(".png")
-    subprocess.call(["armake", "paa2img", path, result])
+    if args["--converter"] == "imagetopaa":
+        subprocess.call(["imagetopaa", path, result])
+    else:
+        subprocess.call(["armake", "paa2img", path, result])
     return result
-
 
 def render(p3dfile, outfile, args):
     print("Loading P3D ...")
@@ -115,7 +117,7 @@ def render(p3dfile, outfile, args):
     mati = [textures.index(x.texture) for x in lod.faces]
 
     print("Converting textures ...")
-    textures = [convert_texture(p3dfile, x) for x in textures]
+    textures = [convert_texture(p3dfile, x, args) for x in textures]
 
     print("Building script ...")
     script = build_render_script(outfile, {
