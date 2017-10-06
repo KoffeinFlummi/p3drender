@@ -128,6 +128,7 @@ def render(p3dfile, outfile, args):
     textures = [convert_texture(p3dfile, x, args) for x in textures]
 
     print("Building script ...")
+    outfile = os.path.abspath(outfile).replace("\\", "\\\\")
     script = build_render_script(outfile, {
             "TEXTURES": textures,
             "VERTS": points,
