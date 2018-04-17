@@ -11,15 +11,16 @@ Usage:
 Options:
     -p, --preset <preset>   Use a preset for rendering. Options are:
                                 weapon (orthographic side view, 1024x512)
-                                item (front-left perspective, 512x512) 
-                                (Overwrites other options)
-    -c, --camera <xyz>      Camera position in form x,y,z [default: 0,-5,0]
-    --converter imagetopaa  Override use of armake by specifying imagetopaa
+                                item (front-left perspective, 512x512)
+    -d, --distance <dist>   Distance of camera to origin [default: 5]
+    -y, --yaw <angle>       Degrees to turn camera around its Y axis.
+    -x, --pitch <angle>     Degrees to turn camera around its X axis.
     -r, --resolution <res>  Output resolution in form x,y [default: 512,512]
     -t, --translate <xyz>   Translation to apply to object [default: 0,0,0]
     -o, --orthographic      Set camera to orthographic instead of perspective
     -g, --gui               Don't run Blender in background mode, so you can
                                 make manual adjustments.
+    --converter imagetopaa  Override use of armake by specifying imagetopaa
     -h, --help              Show usage information and exit.
     -v, --version           Print the version number and exit.
 """
@@ -41,10 +42,11 @@ if __name__ == "__main__":
 
     if args["--preset"] is not None:
         options = {
-            "weapon": { "--camera": "0,-1.5,0", "--resolution": "1024,512", "--orthographic": False },
-            "item": { "--camera": "-0.2,-0.2,0.15", "--resolution": "512,512", "--orthographic": False }
+            "weapon": { "--distance": "1.5", "--resolution": "1024,512", "--orthographic": False },
+            "item": { "--distance": "0.3", "--yaw": "35", "--pitch": "-15", "--resolution": "512,512", "--orthographic": False }
         }
         for k,v in options[args["--preset"]].items():
-            args[k] = v
+            if not args[k]:
+                args[k] = v
 
     sys.exit(p3drender.run(args))

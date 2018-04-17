@@ -28,11 +28,11 @@ def create_material(texture):
     mtex = mat.texture_slots.add()
     mtex.texture = texture
     mtex.texture_coords = 'UV'
-    mtex.use_map_color_diffuse = True 
-    mtex.use_map_color_emission = True 
+    mtex.use_map_color_diffuse = True
+    mtex.use_map_color_emission = True
     mtex.emission_color_factor = 0.5
-    mtex.use_map_density = True 
-    mtex.mapping = 'FLAT' 
+    mtex.use_map_density = True
+    mtex.mapping = 'FLAT'
     return mat
 
 def create_mesh(verts, faces, uvs, normals, sharp_edges):
@@ -46,7 +46,7 @@ def create_mesh(verts, faces, uvs, normals, sharp_edges):
     ob.select = True
 
     me.from_pydata(verts, [], faces)
-    me.update()    
+    me.update()
 
     #me.normals_split_custom_set(functools.reduce(lambda x,y: x+y, normals))
     #me.use_auto_smooth = True
@@ -73,7 +73,7 @@ def create_mesh(verts, faces, uvs, normals, sharp_edges):
     bpy.ops.object.mode_set(mode='OBJECT')
 
     return ob
- 
+
 def main():
     bpy.data.objects.remove(bpy.data.objects["Cube"], True)
     bpy.data.objects.remove(bpy.data.objects["Lamp"], True)
@@ -81,8 +81,16 @@ def main():
     ob = create_mesh(VERTS, FACES, UVS, NORMALS, SHARP_EDGES)
     me = ob.data
 
-    ob.location = TRANSLATION
+    # Transform object
+    ob.rotation_euler = (math.radians(90), 0, 0)
 
+    bbox_center = 0.125 * sum((mathutils.Vector(b) for b in ob.bound_box), mathutils.Vector())
+    x,y,z = bbox_center
+    bbox_center = mathutils.Vector((x,z,y))
+
+    ob.location = mathutils.Vector(TRANSLATION) - bbox_center
+
+    # Apply materials
     textures = [create_texture(x) for x in TEXTURES]
     materials = [create_material(x) for x in textures]
 
@@ -92,40 +100,31 @@ def main():
     for f, i in zip(me.polygons, MATI):
         f.material_index = i
 
-    ob.rotation_euler = (math.radians(90), 0, 0)
-    #ob.rotation_euler = (0, math.radians(90), 0)
-    #ob.rotation_euler = (0, 0, math.radians(90))
-
-
     # Prepare scene
     lamp_data = bpy.data.lamps.new(name="New Lamp", type="HEMI")
+    lamp_data.energy = 5
     lamp_object = bpy.data.objects.new(name="New Lamp", object_data=lamp_data)
     bpy.context.scene.objects.link(lamp_object)
 
     lamp_object.select = True
     bpy.context.scene.objects.active = lamp_object
 
-
+    # Prepare camera
     camera = bpy.context.scene.camera
     camera.location = CAMERA_LOCATION
     if CAMERA_ORTHO:
         bpy.data.cameras["Camera"].type = "ORTHO"
 
-    tc = camera.constraints.new(type="TRACK_TO")
-    tc.target = ob
-    tc.track_axis = "TRACK_NEGATIVE_Z"
-    tc.up_axis = "UP_Y"
+    camera.rotation_euler = (math.radians(90) + CAMERA_PITCH, 0, -CAMERA_YAW)
 
-    #ob.select = True
-    #bpy.ops.view3d.camera_to_view_selected()
 
     bpy.context.scene.render.alpha_mode = "TRANSPARENT"
     bpy.context.scene.render.resolution_x = RESOLUTION[0]
     bpy.context.scene.render.resolution_y = RESOLUTION[1]
     bpy.context.scene.render.filepath = "{}"
-    bpy.ops.render.render(write_still=True) 
+    bpy.ops.render.render(write_still=True)
 
- 
+
 if __name__ == "__main__":
     main()
 """

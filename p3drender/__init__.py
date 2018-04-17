@@ -9,6 +9,7 @@ https://github.com/KoffeinFlummi/p3drender
 
 
 import os
+import math
 import tempfile
 import subprocess
 
@@ -127,6 +128,13 @@ def render(p3dfile, outfile, args):
     print("Converting textures ...")
     textures = [convert_texture(p3dfile, x, args) for x in textures]
 
+    distance = float(args["--distance"]) * -1
+    pitch = math.radians(float(args["--pitch"]))
+    yaw = math.radians(float(args["--yaw"]))
+
+    camera_location = (math.sin(yaw) * math.cos(pitch), math.cos(yaw) * math.cos(pitch), math.sin(pitch))
+    camera_location = tuple(x * distance for x in camera_location)
+
     print("Building script ...")
     script = build_render_script(outfile, {
             "TEXTURES": textures,
@@ -136,7 +144,9 @@ def render(p3dfile, outfile, args):
             "SHARP_EDGES": lod.sharp_edges,
             "UVS": uvs,
             "MATI": mati,
-            "CAMERA_LOCATION": tuple(float(x) for x in args["--camera"].split(",")),
+            "CAMERA_LOCATION": camera_location,
+            "CAMERA_YAW": yaw,
+            "CAMERA_PITCH": pitch,
             "TRANSLATION": tuple(float(x) for x in args["--translate"].split(",")),
             "CAMERA_ORTHO": args["--orthographic"],
             "RESOLUTION": tuple(int(x) for x in args["--resolution"].split(","))
