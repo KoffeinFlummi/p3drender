@@ -12,11 +12,13 @@ Options:
     -p, --preset <preset>   Use a preset for rendering. Options are:
                                 weapon (orthographic side view, 1024x512)
                                 item (front-left perspective, 512x512)
-    -d, --distance <dist>   Distance of camera to origin [default: 5]
+    -d, --distance <dist>   Distance of camera to origin
     -y, --yaw <angle>       Degrees to turn camera around its Y axis.
     -x, --pitch <angle>     Degrees to turn camera around its X axis.
-    -r, --resolution <res>  Output resolution in form x,y [default: 512,512]
-    -t, --translate <xyz>   Translation to apply to object [default: 0,0,0]
+    -r, --resolution <res>  Output resolution in form x,y
+    -t, --translate <xyz>   Translation to apply to object
+        --no-center         Don't center object
+        --texsubs <subs>    Substitutions to apply to textures (foo/bar,abc/123)
     -o, --orthographic      Set camera to orthographic instead of perspective
     -g, --gui               Don't run Blender in background mode, so you can
                                 make manual adjustments.
@@ -48,5 +50,18 @@ if __name__ == "__main__":
         for k,v in options[args["--preset"]].items():
             if not args[k]:
                 args[k] = v
+
+    defaults = {
+        "--distance": 1,
+        "--yaw": 0,
+        "--pitch": 0,
+        "--resolution": "1024,1024",
+        "--translate": "0,0,0",
+        "--orthographic": False
+    }
+
+    for k,v in defaults.items():
+        if args[k] is None:
+            args[k] = v
 
     sys.exit(p3drender.run(args))

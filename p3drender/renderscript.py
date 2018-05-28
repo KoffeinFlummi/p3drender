@@ -88,7 +88,9 @@ def main():
     x,y,z = bbox_center
     bbox_center = mathutils.Vector((x,z,y))
 
-    ob.location = mathutils.Vector(TRANSLATION) - bbox_center
+    ob.location = mathutils.Vector(TRANSLATION)
+    if not NOCENTER:
+        ob.location -= bbox_center
 
     # Apply materials
     textures = [create_texture(x) for x in TEXTURES]

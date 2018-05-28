@@ -125,6 +125,13 @@ def render(p3dfile, outfile, args):
     uvs = [tuple(y.uv for y in x.vertices) for x in lod.faces]
     mati = [textures.index(x.texture) for x in lod.faces]
 
+    if args["--texsubs"] is not None:
+        texsubs = args["--texsubs"].split(",")
+        for i in range(len(textures)):
+            for s in texsubs:
+                a,b = s.split("/")
+                textures[i] = textures[i].replace(a, b)
+
     print("Converting textures ...")
     textures = [convert_texture(p3dfile, x, args) for x in textures]
 
@@ -149,7 +156,8 @@ def render(p3dfile, outfile, args):
             "CAMERA_PITCH": pitch,
             "TRANSLATION": tuple(float(x) for x in args["--translate"].split(",")),
             "CAMERA_ORTHO": args["--orthographic"],
-            "RESOLUTION": tuple(int(x) for x in args["--resolution"].split(","))
+            "RESOLUTION": tuple(int(x) for x in args["--resolution"].split(",")),
+            "NOCENTER": args["--no-center"]
         })
 
     scriptfile = get_tempfile(".py")
