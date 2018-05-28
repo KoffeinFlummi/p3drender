@@ -123,6 +123,7 @@ def main():
     bpy.context.scene.render.alpha_mode = "TRANSPARENT"
     bpy.context.scene.render.resolution_x = RESOLUTION[0]
     bpy.context.scene.render.resolution_y = RESOLUTION[1]
+    bpy.context.scene.render.resolution_percentage = 100
     bpy.context.scene.render.filepath = "{}"
     bpy.ops.render.render(write_still=True)
 
