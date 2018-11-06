@@ -82,7 +82,8 @@ def main():
     me = ob.data
 
     # Transform object
-    ob.rotation_euler = (math.radians(90), 0, 0)
+    ROTATION[0] += 90
+    ob.rotation_euler = [math.radians(r % 360) for r in ROTATION]
 
     bbox_center = 0.125 * sum((mathutils.Vector(b) for b in ob.bound_box), mathutils.Vector())
     x,y,z = bbox_center

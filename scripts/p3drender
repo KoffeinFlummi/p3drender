@@ -17,6 +17,7 @@ Options:
     -x, --pitch <angle>     Degrees to turn camera around its X axis.
     -r, --resolution <res>  Output resolution in form x,y
     -t, --translate <xyz>   Translation to apply to object
+        --rotate <xyz>      Rotation to apply to object (degrees)
         --no-center         Don't center object
         --texsubs <subs>    Substitutions to apply to textures (foo/bar,abc/123)
     -o, --orthographic      Set camera to orthographic instead of perspective
@@ -57,6 +58,7 @@ if __name__ == "__main__":
         "--pitch": 0,
         "--resolution": "1024,1024",
         "--translate": "0,0,0",
+        "--rotate": "0,0,0",
         "--orthographic": False
     }
 

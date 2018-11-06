@@ -154,7 +154,8 @@ def render(p3dfile, outfile, args):
             "CAMERA_LOCATION": camera_location,
             "CAMERA_YAW": yaw,
             "CAMERA_PITCH": pitch,
-            "TRANSLATION": tuple(float(x) for x in args["--translate"].split(",")),
+            "ROTATION": list(float(x) for x in args["--rotate"].split(",")),
+            "TRANSLATION": list(float(x) for x in args["--translate"].split(",")),
             "CAMERA_ORTHO": args["--orthographic"],
             "RESOLUTION": tuple(int(x) for x in args["--resolution"].split(",")),
             "NOCENTER": args["--no-center"]
