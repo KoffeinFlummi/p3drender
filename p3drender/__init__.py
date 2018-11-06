@@ -119,7 +119,7 @@ def render(p3dfile, outfile, args):
             p.coords = (0,0,0)
 
     textures = list(set([x.texture for x in lod.faces]))
-    points = [x.coords for x in lod.points]
+    points = [(x.coords[0], x.coords[1], -1 * x.coords[2]) for x in lod.points]
     faces = [tuple(y.point_index for y in x.vertices) for x in lod.faces]
     normals = [tuple(y.normal for y in x.vertices) for x in lod.faces]
     uvs = [tuple(y.uv for y in x.vertices) for x in lod.faces]
