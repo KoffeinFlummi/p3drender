@@ -143,6 +143,7 @@ def render(p3dfile, outfile, args):
     camera_location = tuple(x * distance for x in camera_location)
 
     print("Building script ...")
+    outfile = os.path.abspath(outfile).replace("\\", "\\\\")
     script = build_render_script(outfile, {
             "TEXTURES": textures,
             "VERTS": points,
